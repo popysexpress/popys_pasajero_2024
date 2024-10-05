@@ -1,55 +1,61 @@
 part of 'sign_up_bloc.dart';
 
 class SignUpState extends Equatable {
-  //variables
   final BlocFormItem name;
   final BlocFormItem lastname;
-  final BlocFormItem phone;
   final BlocFormItem email;
+  final BlocFormItem phone;
   final BlocFormItem password;
   final BlocFormItem confirmPassword;
   final GlobalKey<FormState>? formKey;
+  final Resource? response;
 
-  //contructor
-  const SignUpState({
-    this.name = const BlocFormItem(error: 'Ingresa nombres'),
-    this.lastname = const BlocFormItem(error: 'Ingresa apellidos'),
-    this.phone = const BlocFormItem(error: 'Ingresa el teléfono'),
-    this.email = const BlocFormItem(error: 'Ingresa el email'),
-    this.password = const BlocFormItem(error: 'Ingresa la contraseña'),
-    this.confirmPassword = const BlocFormItem(error: 'Confirmar la contraseña'),
-    this.formKey,
-  });
+  const SignUpState(
+      {this.name = const BlocFormItem(error: 'Ingresa el nombre'),
+      this.lastname = const BlocFormItem(error: 'Ingresa el apellido'),
+      this.email = const BlocFormItem(error: 'Ingresa el email'),
+      this.phone = const BlocFormItem(error: 'Ingresa el telefono'),
+      this.password = const BlocFormItem(error: 'Ingresa el password'),
+      this.confirmPassword =
+          const BlocFormItem(error: 'Confirma la contraseña'),
+      this.formKey,
+      this.response});
 
-  //copy with
-  SignUpState copyWith({
-    BlocFormItem? name,
-    BlocFormItem? lastname,
-    BlocFormItem? phone,
-    BlocFormItem? email,
-    BlocFormItem? password,
-    BlocFormItem? confirmPassword,
-    GlobalKey<FormState>? formKey,
-  }) {
+  toUser() => User(
+      name: name.value,
+      lastname: lastname.value,
+      email: email.value,
+      phone: phone.value,
+      password: password.value);
+
+  SignUpState copyWith(
+      {BlocFormItem? name,
+      BlocFormItem? lastname,
+      BlocFormItem? email,
+      BlocFormItem? phone,
+      BlocFormItem? password,
+      BlocFormItem? confirmPassword,
+      GlobalKey<FormState>? formKey,
+      Resource? response}) {
     return SignUpState(
-      name: name ?? this.name,
-      lastname: lastname ?? this.lastname,
-      phone: phone ?? this.phone,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
-      formKey: formKey,
-    );
+        name: name ?? this.name,
+        lastname: lastname ?? this.lastname,
+        email: email ?? this.email,
+        phone: phone ?? this.phone,
+        password: password ?? this.password,
+        confirmPassword: confirmPassword ?? this.confirmPassword,
+        formKey: formKey,
+        response: response);
   }
 
-  //variables que cambiaran de estado
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         name,
         lastname,
-        phone,
         email,
+        phone,
         password,
         confirmPassword,
+        response,
       ];
 }

@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:popys_pasajero_2024/src/domain/models/user.dart';
+import 'package:popys_pasajero_2024/src/domain/useCases/auth/AuthUseCases.dart';
+import 'package:popys_pasajero_2024/src/domain/utils/Resource.dart';
 
 import 'package:popys_pasajero_2024/src/presentation/utils/BlocFormItem.dart';
 
@@ -8,10 +11,13 @@ part 'sign_up_state.dart';
 part 'sign_up_event.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
+  // inyectar caso de usos
+  AuthUseCases authUseCases;
+
   //variables
   final formKey = GlobalKey<FormState>();
 
-  SignUpBloc() : super(SignUpState()) {
+  SignUpBloc(this.authUseCases) : super(SignUpState()) {
     // evento para inicializar form key
     on<SignUpInitEvent>((event, emit) {
       // ejecutar evento
@@ -109,7 +115,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     });
 
     // evento para boton submit
-    on<FormSubmitEvent>((event, emit) {
+    on<FormSubmitEvent>((event, emit) async {
       // ejecutar evento
       print('Name: ${state.name.value}');
       print('Lastname: ${state.lastname.value}');
@@ -117,6 +123,30 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       print('Email: ${state.email.value}');
       print('Password: ${state.password.value}');
       print('Password Confirm: ${state.confirmPassword.value}');
+
+      // emitir nuevo estado
+      emit(
+        state.copyWith(
+          response: Loading(),
+          formKey: formKey,
+        ),
+      );
+
+      // enviamos la peticion
+      Resource response = await authUseCases.signUpUseCase.run(state.toUser());
+
+      // emitir nuevo cambio de estado
+      emit(
+        state.copyWith(
+          response: response,
+          formKey: formKey,
+        ),
+      );
+    });
+
+    // evento para limpiar formulario
+    on<FormResetEvent>((event, emit) {
+      state.formKey?.currentState?.reset();
     });
   }
 }

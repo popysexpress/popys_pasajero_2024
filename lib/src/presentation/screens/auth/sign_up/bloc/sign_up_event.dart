@@ -75,3 +75,6 @@ class PasswordConfirmChangedEvent extends SignUpEvent {
 
 //evento para enviar el formulario
 class FormSubmitEvent extends SignUpEvent {}
+
+//evento para reiniciar forumulario
+class FormResetEvent extends SignUpEvent {}
