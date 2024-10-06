@@ -233,6 +233,11 @@ class PrimaryColors {
   // Blue
   Color get blue500 => const Color(0XFF2196F3);
   Color get blue900 => const Color(0XFF1139BC);
+  Color get blue100 => const Color(0XFF262261);
+  Color get blue200 => const Color(0xFF17144E);
+
+  //Blue L
+  Color get bluelight100 => const Color(0XFF7177AB);
 
   // BlueGray
   Color get blueGray100 => const Color(0XFFCCCCCC);
@@ -331,6 +336,7 @@ class PrimaryColors {
 
   // White
   Color get whiteA700 => const Color(0XFFFEFEFD);
+  Color get whiteF8 => const Color(0XFFF8F8FF);
 
   // Yellow
   Color get yellow900 => const Color(0XFFED7625);

@@ -8,4 +8,13 @@ abstract class AuthRepository {
 
   // metodo register
   Future<Resource<AuthResponse>> register(User user);
+
+  // metodo para guardar datos de session
+  Future<void> saveUserSession(AuthResponse authResponse);
+
+  // metodo para obtner datos de session
+  Future<AuthResponse?> getUserSession();
+
+  // metodo para cerrar session
+  Future<bool> logout();
 }

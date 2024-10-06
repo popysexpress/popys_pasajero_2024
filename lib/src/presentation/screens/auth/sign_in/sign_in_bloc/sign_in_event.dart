@@ -29,3 +29,14 @@ class PasswordChangedEvent extends SignInEvent {
 
 //evento para enviar el formulario
 class FormSubmitEvent extends SignInEvent {}
+
+// evento para guardar data user session
+class SaveUserSeasseonEvent extends SignInEvent {
+  //
+  final AuthResponse authResponse;
+
+  // constructor
+  SaveUserSeasseonEvent({
+    required this.authResponse,
+  });
+}

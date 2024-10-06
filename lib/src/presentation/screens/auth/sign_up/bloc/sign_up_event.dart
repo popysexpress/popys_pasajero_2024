@@ -78,3 +78,14 @@ class FormSubmitEvent extends SignUpEvent {}
 
 //evento para reiniciar forumulario
 class FormResetEvent extends SignUpEvent {}
+
+// evento para guardar data user session
+class SaveUserSeasseonEvent extends SignUpEvent {
+  //
+  final AuthResponse authResponse;
+
+  // constructor
+  SaveUserSeasseonEvent({
+    required this.authResponse,
+  });
+}

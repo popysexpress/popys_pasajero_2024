@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:popys_pasajero_2024/src/domain/models/AuthResponse.dart';
 import 'package:popys_pasajero_2024/src/domain/models/user.dart';
 import 'package:popys_pasajero_2024/src/domain/useCases/auth/AuthUseCases.dart';
 import 'package:popys_pasajero_2024/src/domain/utils/Resource.dart';
@@ -17,13 +20,27 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   //variables
   final formKey = GlobalKey<FormState>();
 
-  SignUpBloc(this.authUseCases) : super(SignUpState()) {
+  SignUpBloc(this.authUseCases) : super(const SignUpState()) {
     // evento para inicializar form key
-    on<SignUpInitEvent>((event, emit) {
+    on<SignUpInitEvent>((event, emit) async {
+      // verificar si la data de user session guardo
+      AuthResponse? authResponse =
+          await authUseCases.getUserSessionUseCase.run();
+      // imprimir en consola
+      print('Auth Response Seesion: ${authResponse?.toJson()}');
       // ejecutar evento
       emit(state.copyWith(
         formKey: formKey,
       ));
+
+      //validar si existe session
+      if (authResponse != null) {
+        //
+        emit(state.copyWith(
+          response: Success(authResponse),
+          formKey: formKey,
+        ));
+      }
     });
 
     // evento para campo nombre
@@ -147,6 +164,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     // evento para limpiar formulario
     on<FormResetEvent>((event, emit) {
       state.formKey?.currentState?.reset();
+    });
+
+    // evento para save data user session
+    on<SaveUserSeasseonEvent>((event, emit) async {
+      // ejecutar el evento
+      await authUseCases.saveUserSessionUseCase.run(event.authResponse);
     });
   }
 }

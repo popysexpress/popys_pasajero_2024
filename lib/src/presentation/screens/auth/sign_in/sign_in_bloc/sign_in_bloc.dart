@@ -1,9 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart';
+import 'package:popys_pasajero_2024/src/domain/models/AuthResponse.dart';
 import 'package:popys_pasajero_2024/src/domain/useCases/auth/AuthUseCases.dart';
 import 'package:popys_pasajero_2024/src/domain/useCases/auth/SignInUseCase.dart';
 import 'package:popys_pasajero_2024/src/domain/utils/Resource.dart';
@@ -19,13 +22,27 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final formKey = GlobalKey<FormState>();
 
   //cosntructor
-  SignInBloc(this.authUseCases) : super(SignInState()) {
+  SignInBloc(this.authUseCases) : super(const SignInState()) {
     // evento para inicializar form key
-    on<SignInInitEvent>((event, emit) {
+    on<SignInInitEvent>((event, emit) async {
+      // verificar si la data de user session guardo
+      AuthResponse? authResponse =
+          await authUseCases.getUserSessionUseCase.run();
+      // imprimir en consola
+      print('Auth Response Seesion: ${authResponse?.toJson()}');
       // ejecutar evento
       emit(state.copyWith(
         formKey: formKey,
       ));
+
+      //validar si existe session
+      if (authResponse != null) {
+        //
+        emit(state.copyWith(
+          response: Success(authResponse),
+          formKey: formKey,
+        ));
+      }
     });
 
     // evento para campo email
@@ -79,6 +96,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         response: response,
         formKey: formKey,
       ));
+    });
+
+    // evento para save data user session
+    on<SaveUserSeasseonEvent>((event, emit) async {
+      // ejecutar el evento
+      await authUseCases.saveUserSessionUseCase.run(event.authResponse);
     });
   }
 }
